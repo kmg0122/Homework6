@@ -10,23 +10,23 @@ params:
   show_code: yes
 ---
 
-``{r setup, include=FALSE}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(
     echo    = as.logical(params$show_code),
     message = FALSE, 
     warning = FALSE
 )
-``
+```
 
-``{r}
+```{r}
 library(tidyquant)
 library(dplyr)
 library(knitr)
-``
+```
 
 This report contains market data for `r params$symbols`.  To make for something to plot, I suggest you pull 7 days worth of data.
 
-``{r}
+```{r}
 # Get data
 stock_data_tbl <- tq_get(
         x    = params$symbols,
@@ -36,15 +36,15 @@ stock_data_tbl <- tq_get(
     select(symbol, date, adjusted)
 
 kable(stock_data_tbl,caption="Last 7 days of market close")
-``
+```
 
-``{r}
+```{r}
 # Create plot with gain/loss
 ## you to do
-``
+```
 
-``{r}
+```{r}
 # save data 
 # do you want to have a single running RDS file, or a file for every time this runs
 # up to you to decide
-``
+```
