@@ -11,3 +11,4 @@ rmarkdown::render(
         show_code      = FALSE
     )
 )
+ 
