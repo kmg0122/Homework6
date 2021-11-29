@@ -7,6 +7,7 @@ output:
     df_print: paged
 params:
   symbols: ["AAPL","TSLA","SPY","PG","TWTR"]
+  show_code: yes
 ---
 
 ```{r setup, include=FALSE}
