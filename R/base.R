@@ -28,7 +28,7 @@ shinyUI(pageWithSidebar(
       numericInput("var3","weight of the SPY","0")
     ),
     
-    
+     
     conditionalPanel(
       condition = "input.symbol.indexOf('PG') > -1",
       numericInput("var4","weight of the PG","0")
