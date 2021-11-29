@@ -4,7 +4,7 @@ library(ggplot2)
 
 shinyServer(function(input, output) {
   
-  githubURL<-("https://github.com/kmg0122/Homework6/blob/main/data/StockPrice.RDS")
+  githubURL<-("C:/Users/Mingang Kim/Downloads/StockPrice.RDS")
   data<-readRDS(githubURL)
   
   weight<-reactive({
@@ -42,17 +42,12 @@ shinyServer(function(input, output) {
     
     ggplot(reactive_data(),aes(x=date,y=adjusted,color=symbol))+
       geom_point()+geom_line()+xlab('Date')+ylab('Adjusted price')+theme_bw()+
-      ggtitle("Adjusted price over time")
+      ggtitle("Plot of Adjusted price")
     
   })
   
   
-  output$piechart<- renderPlot({
-    
-    ggplot(reactive_data(),aes(x='',y=weights,fill=symbol))+geom_bar(width=1,stat='identity')+
-      coord_polar("y",start = 0)+ggtitle("Pie Chart")
-    
-  })
+ 
   
   output$portfolio <- renderPlot({
     
