@@ -1,64 +1,68 @@
 library(shiny)
+library(dplyr)
+library(ggplot2)
 
-shinyUI(pageWithSidebar(
+shinyServer(function(input, output) {
   
-  headerPanel("Flexdashboard"),
+  githubURL<-("https://github.com/kmg0122/Homework6/blob/main/data/StockPrice.RDS")
+  data<-readRDS(githubURL)
   
-  sidebarPanel(
-     selectInput("symbol", "Select your portfolio", 
-                choices = c("AAPL","FB","JPM","MRNA","WMT"), selected = c("AAPL","FB"),
-                multiple = TRUE), 
-     
-     dateRangeInput('dateRange',
-                     label = 'Date range input: yyyy-mm-dd',
-                     start = '2021-11-15', end = Sys.Date()),
-     
-     conditionalPanel(
-       condition = "input.symbol.indexOf('AAPL') > -1",
-       numericInput("var1","Enter the weightage of the AAPL","10")
-     ),
-     
-     conditionalPanel(
-       condition = "input.symbol.indexOf('FB') > -1",
-       numericInput("var2","Enter the weightage of the FB","10")
-     ),
-
-     conditionalPanel(
-       condition = "input.symbol.indexOf('JPM') > -1",
-       numericInput("var3","Enter the weightage of the JPM","10")
-     ),
-     
-
-     conditionalPanel(
-       condition = "input.symbol.indexOf('MRNA') > -1",
-       numericInput("var4","Enter the weightage of the MRNA","10")
-     ),
-     
-     conditionalPanel(
-       condition = "input.symbol.indexOf('WMT') > -1",
-       numericInput("var5","Enter the weightage of the WMT","10")
-     )
-     
-      ),
+  weight<-reactive({
+    
+    weight<-data.frame(symbol=character(),weights=numeric())
+    
+    if(!is.null(input$var1)){
+      weight<-weight%>%add_row(symbol='AAPL',weights=input$var1)
+    }
+    if(!is.null(input$var2)){
+      weight<-weight%>%add_row(symbol='TSLA',weights=input$var2)
+    }
+    if(!is.null(input$var3)){
+      weight<-weight%>%add_row(symbol='SPY',weights=input$var3)
+    }
+    if(!is.null(input$var4)){
+      weight<-weight%>%add_row(symbol='PG',weights=input$var4)
+    }
+    if(!is.null(input$var5)){
+      weight<-weight%>%add_row(symbol='TWTR',weights=input$var5)
+    }
+    weight$weights<-weight$weights/sum(weight$weights)
+    return(weight)
+  })
+  
+  reactive_data <- reactive({
+    data %>%
+      filter(symbol %in% input$symbol) %>%
+      filter(date >= input$dateRange[1] & date<= input$dateRange[2]) %>%
+      left_join(weight(),by = "symbol")
+  }) 
   
   
-   
-    mainPanel(
-      
-      tabsetPanel(
-        tabPanel(
-          "Portfolio Worth",
-          plotOutput("portfolio"),
-          plotOutput("piechart")),
-          
-        tabPanel(
-          "Timeseries",
-          plotOutput("timeseries")
-        )
-        
-
-        )
-      )
-      
-    )
-)
+  output$timeseries <- renderPlot({
+    
+    ggplot(reactive_data(),aes(x=date,y=adjusted,color=symbol))+
+      geom_point()+geom_line()+xlab('Date')+ylab('Adjusted price')+theme_bw()+
+      ggtitle("Adjusted price over time")
+    
+  })
+  
+  
+  output$piechart<- renderPlot({
+    
+    ggplot(reactive_data(),aes(x='',y=weights,fill=symbol))+geom_bar(width=1,stat='identity')+
+      coord_polar("y",start = 0)+ggtitle("Pie Chart")
+    
+  })
+  
+  output$portfolio <- renderPlot({
+    
+    portfoliodata<-reactive_data()%>%
+      mutate(returns=adjusted/lag(adjusted,1)-1) %>%
+      mutate(weighted.returns=returns*weights) %>%
+      filter(date>min(date))
+    
+    ggplot(portfoliodata,aes(x=date,y=weighted.returns,fill=symbol))+
+      geom_bar(stat='identity')
+  })
+  
+})
