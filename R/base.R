@@ -15,28 +15,28 @@ shinyUI(pageWithSidebar(
     
     conditionalPanel(
       condition = "input.symbol.indexOf('AAPL') > -1",
-      numericInput("var1","Enter the weightage of the AAPL","0")
+      numericInput("var1","weight of the AAPL","0")
     ),
     
     conditionalPanel(
       condition = "input.symbol.indexOf('TSLA') > -1",
-      numericInput("var2","Enter the weightage of the TSLA","0")
+      numericInput("var2","weight of the TSLA","0")
     ),
     
     conditionalPanel(
       condition = "input.symbol.indexOf('SPY') > -1",
-      numericInput("var3","Enter the weightage of the SPY","0")
+      numericInput("var3","weight of the SPY","0")
     ),
     
     
     conditionalPanel(
       condition = "input.symbol.indexOf('PG') > -1",
-      numericInput("var4","Enter the weightage of the PG","0")
+      numericInput("var4","weight of the PG","0")
     ),
     
     conditionalPanel(
       condition = "input.symbol.indexOf('TWTR') > -1",
-      numericInput("var5","Enter the weightage of the TWTR","0")
+      numericInput("var5","weight of the TWTR","0")
     )
     
   ),
@@ -48,8 +48,7 @@ shinyUI(pageWithSidebar(
     tabsetPanel(
       tabPanel(
         "Portpoilo",
-        plotOutput("portfolio"),
-        plotOutput("piechart")),
+        plotOutput("portfolio")),
       
       tabPanel(
         "Timeseries",
