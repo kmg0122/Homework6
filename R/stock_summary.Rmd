@@ -45,9 +45,9 @@ kable(stock_data_tbl,caption="Last 7 days of market close")
 #     xlab = "Date", ylab = "Adjusted price")
 ggplot(data=stock_data_tbl,aes(x=date,y=adjusted,color=symbol))+
   geom_line()+xlab('Date')+ylab('Adjusted price')+theme_bw()+
-  scale_colour_manual(values=c("red","green","blue","pink","yellow"))
+  scale_colour_manual(values=c("red","orange","yellow","green","blue"))
   
-```
+``` 
 
 ```{r}
 # save data 
